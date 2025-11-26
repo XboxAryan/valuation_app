@@ -113,7 +113,10 @@ def get_companies():
     conn = sqlite3.connect('valuations.db')
     c = conn.cursor()
     c.execute('''SELECT c.id, c.name, c.sector, c.created_at,
-                 vr.final_equity_value, vr.recommendation, vr.upside_pct
+                 vr.final_equity_value, vr.recommendation, vr.upside_pct,
+                 vr.pe_ratio, vr.roe, vr.z_score, vr.market_cap, 
+                 vr.current_price, vr.wacc, vr.ev_ebitda, vr.roic,
+                 vr.fcf_yield, vr.debt_to_equity
                  FROM companies c
                  LEFT JOIN valuation_results vr ON c.id = vr.company_id
                  AND vr.id = (SELECT MAX(id) FROM valuation_results WHERE company_id = c.id)
@@ -128,7 +131,17 @@ def get_companies():
             'created_at': row[3],
             'fair_value': row[4],
             'recommendation': row[5],
-            'upside': row[6]
+            'upside': row[6],
+            'pe_ratio': row[7],
+            'roe': row[8],
+            'z_score': row[9],
+            'market_cap': row[10],
+            'current_price': row[11],
+            'wacc': row[12],
+            'ev_ebitda': row[13],
+            'roic': row[14],
+            'fcf_yield': row[15],
+            'debt_to_equity': row[16]
         })
     
     conn.close()
@@ -408,7 +421,8 @@ def dashboard_stats():
         AVG(vr.pe_ratio) as avg_pe,
         AVG(vr.roe) as avg_roe,
         SUM(vr.final_equity_value) as total_fair_value,
-        SUM(vr.market_cap) as total_market_cap
+        SUM(vr.market_cap) as total_market_cap,
+        AVG(vr.wacc) as avg_wacc
         FROM companies c
         JOIN valuation_results vr ON c.id = vr.company_id
         WHERE vr.id IN (
@@ -417,8 +431,8 @@ def dashboard_stats():
     
     stats = c.fetchone()
     
-    # Get sector breakdown
-    c.execute('''SELECT c.sector, COUNT(*), AVG(vr.upside_pct), AVG(vr.roe)
+    # Get sector breakdown with P/E
+    c.execute('''SELECT c.sector, COUNT(*), AVG(vr.upside_pct), AVG(vr.roe), AVG(vr.pe_ratio)
                  FROM companies c
                  JOIN valuation_results vr ON c.id = vr.company_id
                  WHERE vr.id IN (
@@ -439,8 +453,10 @@ def dashboard_stats():
         'avg_roe': round(stats[6] or 0, 1),
         'total_fair_value': stats[7] or 0,
         'total_market_cap': stats[8] or 0,
-        'sectors': [{'name': s[0], 'count': s[1], 'avg_upside': round(s[2] or 0, 2), 'avg_roe': round(s[3] or 0, 1)} for s in sectors]
+        'avg_wacc': round(stats[9] or 0, 2),
+        'sectors': [{'name': s[0], 'count': s[1], 'avg_upside': round(s[2] or 0, 2), 'avg_roe': round(s[3] or 0, 1), 'avg_pe': round(s[4] or 0, 1)} for s in sectors]
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Use port 5001 to avoid conflict with macOS AirPlay Receiver on port 5000
+    app.run(debug=True, port=5001)

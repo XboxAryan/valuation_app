@@ -442,3 +442,190 @@ size_premium
 2025-11-25 20:49:48,756 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 20:49:48] "GET /api/dashboard/stats HTTP/1.1" 200 -
 2025-11-25 20:49:49,553 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 20:49:49] "GET /api/companies HTTP/1.1" 200 -
 2025-11-25 20:49:51,237 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 20:49:51] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:06:00,672 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:06:00,708 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-25 21:06:00,709 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:06:00,709 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:06:00,860 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:06:00,881 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:06:00,887 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:06:05,474 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:06:05] "GET / HTTP/1.1" 200 -
+2025-11-25 21:06:05,502 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:06:05] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-11-25 21:06:05,502 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:06:05] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-11-25 21:06:05,533 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:06:05] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:06:05,533 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:06:05] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:06:08,787 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:06:08] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:07:33,911 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:07:33,957 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-25 21:07:33,958 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:07:33,958 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:07:34,106 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:07:34,127 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:07:34,133 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:09:20,338 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:09:20,385 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-25 21:09:20,385 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:09:20,386 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:09:20,545 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:09:20,566 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:09:20,572 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:09:22,557 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:09:22] "GET / HTTP/1.1" 200 -
+2025-11-25 21:09:22,604 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:09:22] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-11-25 21:09:22,604 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:09:22] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-11-25 21:09:22,705 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:09:22] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:09:22,707 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:09:22] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:10:31,447 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:10:31,496 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-25 21:10:31,496 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:10:31,497 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:10:31,653 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:10:31,674 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:10:31,680 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:10:34,459 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:10:34] "GET / HTTP/1.1" 200 -
+2025-11-25 21:10:34,508 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:10:34] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-11-25 21:10:34,510 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:10:34] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-11-25 21:10:34,552 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:10:34] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:10:34,554 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:10:34] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:10:49,862 - werkzeug - INFO -  * Detected change in '/Users/aryanbhatia/Documents/0DevProjects/test_projects/app.py', reloading
+2025-11-25 21:10:49,926 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:10:50,158 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:10:50,197 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:10:50,204 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:11:55,771 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:11:55,810 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-11-25 21:11:55,810 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:11:55,811 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:11:55,965 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:11:55,989 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:11:55,995 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:11:57,716 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:11:57] "GET / HTTP/1.1" 200 -
+2025-11-25 21:11:57,754 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:11:57] "GET /static/css/styles_new.css HTTP/1.1" 200 -
+2025-11-25 21:11:57,756 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:11:57] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-11-25 21:11:57,813 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:11:57] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:11:57,814 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:11:57] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:11:58,133 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:11:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-25 21:12:01,389 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:01] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:12:03,103 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:03] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:12:09,177 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:09] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:12:12,123 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:12] "GET /api/company/14 HTTP/1.1" 200 -
+2025-11-25 21:12:15,054 - __main__ - INFO - Manual valuation requested for company ID 14
+2025-11-25 21:12:15,055 - valuation_service - INFO - Fetched data for company ID 14: GreenEnergy Corp
+2025-11-25 21:12:15,055 - valuation_service - INFO - Starting valuation for GreenEnergy Corp (ID: 14)
+2025-11-25 21:12:15,058 - valuation_service - INFO - Valuation completed for GreenEnergy Corp: Fair Value $14,940,129, Recommendation: SELL
+2025-11-25 21:12:15,060 - valuation_service - INFO - Saved valuation results for company ID 14
+2025-11-25 21:12:15,061 - valuation_service - INFO - Complete valuation workflow successful for GreenEnergy Corp
+2025-11-25 21:12:15,061 - __main__ - INFO - Valuation completed successfully for company ID 14
+2025-11-25 21:12:15,061 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:15] "POST /api/valuation/14 HTTP/1.1" 200 -
+2025-11-25 21:12:15,066 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:15] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:12:15,066 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:15] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:12:51,405 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:12:51] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:13:16,963 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:13:16] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:13:23,339 - __main__ - INFO - Manual valuation requested for company ID 14
+2025-11-25 21:13:23,341 - valuation_service - INFO - Fetched data for company ID 14: GreenEnergy Corp
+2025-11-25 21:13:23,342 - valuation_service - INFO - Starting valuation for GreenEnergy Corp (ID: 14)
+2025-11-25 21:13:23,347 - valuation_service - INFO - Valuation completed for GreenEnergy Corp: Fair Value $14,940,129, Recommendation: SELL
+2025-11-25 21:13:23,350 - valuation_service - INFO - Saved valuation results for company ID 14
+2025-11-25 21:13:23,350 - valuation_service - INFO - Complete valuation workflow successful for GreenEnergy Corp
+2025-11-25 21:13:23,350 - __main__ - INFO - Valuation completed successfully for company ID 14
+2025-11-25 21:13:23,350 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:13:23] "POST /api/valuation/14 HTTP/1.1" 200 -
+2025-11-25 21:13:23,359 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:13:23] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:13:23,360 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:13:23] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:14:21,182 - werkzeug - INFO -  * Detected change in '/Users/aryanbhatia/Documents/0DevProjects/test_projects/app.py', reloading
+2025-11-25 21:14:21,216 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:14:21,446 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:14:21,470 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:14:21,479 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:16:09,379 - __main__ - INFO - Manual valuation requested for company ID 17
+2025-11-25 21:16:09,382 - valuation_service - INFO - Fetched data for company ID 17: Manufacturing Ltd
+2025-11-25 21:16:09,383 - valuation_service - INFO - Starting valuation for Manufacturing Ltd (ID: 17)
+2025-11-25 21:16:09,393 - valuation_service - INFO - Valuation completed for Manufacturing Ltd: Fair Value $8,202,853, Recommendation: SELL
+2025-11-25 21:16:09,395 - valuation_service - INFO - Saved valuation results for company ID 17
+2025-11-25 21:16:09,395 - valuation_service - INFO - Complete valuation workflow successful for Manufacturing Ltd
+2025-11-25 21:16:09,395 - __main__ - INFO - Valuation completed successfully for company ID 17
+2025-11-25 21:16:09,396 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:16:09] "POST /api/valuation/17 HTTP/1.1" 200 -
+2025-11-25 21:16:09,404 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:16:09] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:16:09,408 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:16:09] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:16:16,129 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:16:16] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:17:48,131 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:17:48] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:18:09,618 - __main__ - INFO - Manual valuation requested for company ID 13
+2025-11-25 21:18:09,620 - valuation_service - INFO - Fetched data for company ID 13: TechStartup Inc
+2025-11-25 21:18:09,620 - valuation_service - INFO - Starting valuation for TechStartup Inc (ID: 13)
+2025-11-25 21:18:09,625 - valuation_service - INFO - Valuation completed for TechStartup Inc: Fair Value $2,617,875, Recommendation: UNDERWEIGHT
+2025-11-25 21:18:09,629 - valuation_service - INFO - Saved valuation results for company ID 13
+2025-11-25 21:18:09,629 - valuation_service - INFO - Complete valuation workflow successful for TechStartup Inc
+2025-11-25 21:18:09,629 - __main__ - INFO - Valuation completed successfully for company ID 13
+2025-11-25 21:18:09,629 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:18:09] "POST /api/valuation/13 HTTP/1.1" 200 -
+2025-11-25 21:18:09,638 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:18:09] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:18:09,641 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:18:09] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:19:21,020 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:21] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:19:26,456 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:26] "GET / HTTP/1.1" 200 -
+2025-11-25 21:19:26,490 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:26] "GET /static/css/styles_modern.css?v=2 HTTP/1.1" 200 -
+2025-11-25 21:19:26,490 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:26] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-11-25 21:19:26,578 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:26] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:19:26,579 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:26] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:19:33,598 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:33] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:19:36,564 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:36] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:19:37,445 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:37] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:19:42,565 - __main__ - INFO - Manual valuation requested for company ID 13
+2025-11-25 21:19:42,566 - valuation_service - INFO - Fetched data for company ID 13: TechStartup Inc
+2025-11-25 21:19:42,566 - valuation_service - INFO - Starting valuation for TechStartup Inc (ID: 13)
+2025-11-25 21:19:42,569 - valuation_service - INFO - Valuation completed for TechStartup Inc: Fair Value $2,617,875, Recommendation: UNDERWEIGHT
+2025-11-25 21:19:42,570 - valuation_service - INFO - Saved valuation results for company ID 13
+2025-11-25 21:19:42,570 - valuation_service - INFO - Complete valuation workflow successful for TechStartup Inc
+2025-11-25 21:19:42,570 - __main__ - INFO - Valuation completed successfully for company ID 13
+2025-11-25 21:19:42,570 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:42] "POST /api/valuation/13 HTTP/1.1" 200 -
+2025-11-25 21:19:42,575 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:42] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:19:42,575 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:42] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:19:54,749 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:19:54] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:27:41,077 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:27:54,197 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:27:54,258 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-11-25 21:27:54,258 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:27:54,259 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:27:54,413 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:27:54,435 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:27:54,441 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:27:56,999 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:27:56] "GET / HTTP/1.1" 200 -
+2025-11-25 21:27:57,038 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:27:57] "GET /static/css/styles_professional.css?v=3 HTTP/1.1" 200 -
+2025-11-25 21:27:57,038 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:27:57] "GET /static/js/app.js?v=3 HTTP/1.1" 200 -
+2025-11-25 21:27:57,120 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:27:57] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:27:57,123 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:27:57] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:28:06,488 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:28:06] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:28:30,030 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:28:30] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:28:41,744 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:28:41] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:28:44,940 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:28:44] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:28:47,014 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:28:47] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:29:05,426 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:29:05] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:32:19,556 - werkzeug - INFO -  * Detected change in '/Users/aryanbhatia/Documents/0DevProjects/test_projects/app.py', reloading
+2025-11-25 21:32:19,595 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:32:19,802 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:32:19,828 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:32:19,834 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:32:21,852 - werkzeug - INFO -  * Detected change in '/Users/aryanbhatia/Documents/0DevProjects/test_projects/app.py', reloading
+2025-11-25 21:32:21,900 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:32:22,054 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:32:22,075 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:32:22,080 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:32:33,881 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:32:33,911 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-11-25 21:32:33,911 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-25 21:32:33,912 - werkzeug - INFO -  * Restarting with stat
+2025-11-25 21:32:34,058 - valuation_service - INFO - Initialized ValuationService with database: valuations.db
+2025-11-25 21:32:34,079 - werkzeug - WARNING -  * Debugger is active!
+2025-11-25 21:32:34,084 - werkzeug - INFO -  * Debugger PIN: 648-729-717
+2025-11-25 21:32:37,767 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:37] "GET / HTTP/1.1" 200 -
+2025-11-25 21:32:37,839 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:37] "[36mGET /static/css/styles_professional.css?v=3 HTTP/1.1[0m" 304 -
+2025-11-25 21:32:37,839 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:37] "[36mGET /static/js/app.js?v=3 HTTP/1.1[0m" 304 -
+2025-11-25 21:32:38,068 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:38] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:32:38,071 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:38] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:32:40,188 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:40] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:32:45,891 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:45] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-11-25 21:32:53,541 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:53] "GET /api/companies HTTP/1.1" 200 -
+2025-11-25 21:32:56,307 - werkzeug - INFO - 127.0.0.1 - - [25/Nov/2025 21:32:56] "GET /api/company/14 HTTP/1.1" 200 -

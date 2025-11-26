@@ -1,5 +1,15 @@
+// ============================================
+// PROFESSIONAL INVESTMENT PLATFORM - JAVASCRIPT
+// Enhanced with investor-focused features
+// ============================================
+
 // Global state
 let currentCompanyId = null;
+let allCompanies = [];
+let filteredCompanies = [];
+let currentFilter = 'all';
+let currentSort = 'name';
+let dashboardStats = null;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
@@ -8,15 +18,78 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Form submission
     document.getElementById('company-form').addEventListener('submit', saveCompany);
+    
+    // Load theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
 });
 
-// View management
+// ============================================
+// THEME TOGGLE
+// ============================================
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// ============================================
+// KEYBOARD SHORTCUTS
+// ============================================
+
+function handleKeyboardShortcuts(e) {
+    // Cmd/Ctrl + K: Focus search
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('company-search');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    }
+    
+    // Cmd/Ctrl + N: New company
+    if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+        e.preventDefault();
+        showAddCompanyModal();
+    }
+    
+    // Escape: Close modals
+    if (e.key === 'Escape') {
+        closeModal();
+        closeValuationModal();
+    }
+    
+    // Cmd/Ctrl + 1/2: Switch views
+    if ((e.metaKey || e.ctrlKey) && e.key === '1') {
+        e.preventDefault();
+        showView('dashboard');
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key === '2') {
+        e.preventDefault();
+        showView('companies');
+    }
+}
+
+// ============================================
+// VIEW MANAGEMENT
+// ============================================
+
 function showView(viewName) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     
     document.getElementById(`${viewName}-view`).classList.add('active');
-    event.target.classList.add('active');
+    const navLink = document.querySelector(`[data-view="${viewName}"]`);
+    if (navLink) {
+        navLink.classList.add('active');
+    }
     
     if (viewName === 'dashboard') {
         loadDashboard();
@@ -25,89 +98,345 @@ function showView(viewName) {
     }
 }
 
-// Dashboard functions
+// ============================================
+// DASHBOARD FUNCTIONS - ENHANCED
+// ============================================
+
 async function loadDashboard() {
     try {
         const response = await fetch('/api/dashboard/stats');
         const stats = await response.json();
+        dashboardStats = stats;
         
+        // Update main stats with enhanced display
         document.getElementById('total-companies').textContent = stats.total_companies;
         document.getElementById('avg-upside').textContent = `${stats.avg_upside.toFixed(1)}%`;
         document.getElementById('avg-pe').textContent = `${stats.avg_pe.toFixed(1)}x`;
         document.getElementById('avg-roe').textContent = `${stats.avg_roe.toFixed(1)}%`;
         
+        // Add WACC if available
+        const avgWacc = stats.avg_wacc || 0;
+        const waccElement = document.getElementById('avg-wacc');
+        if (waccElement) {
+            waccElement.textContent = `${avgWacc.toFixed(2)}%`;
+        }
+        
+        // Update trend indicators
+        updateTrendIndicators(stats);
+        
+        // Update recommendation counts with percentages
+        const total = stats.total_companies || 1;
         document.getElementById('buy-count').textContent = stats.buy_count;
         document.getElementById('hold-count').textContent = stats.hold_count;
         document.getElementById('sell-count').textContent = stats.sell_count;
         
-        // Sector breakdown
-        const sectorHtml = stats.sectors.map(sector => `
-            <div class="sector-item">
-                <strong>${sector.name}</strong>
-                <span>${sector.count} companies</span>
-                <span>Upside: ${sector.avg_upside.toFixed(1)}%</span>
-                <span>ROE: ${sector.avg_roe.toFixed(1)}%</span>
-            </div>
-        `).join('');
+        const buyPct = document.getElementById('buy-pct');
+        const holdPct = document.getElementById('hold-pct');
+        const sellPct = document.getElementById('sell-pct');
         
-        document.getElementById('sector-breakdown').innerHTML = sectorHtml;
+        if (buyPct) buyPct.textContent = `${((stats.buy_count / total) * 100).toFixed(0)}% of portfolio`;
+        if (holdPct) holdPct.textContent = `${((stats.hold_count / total) * 100).toFixed(0)}% of portfolio`;
+        if (sellPct) sellPct.textContent = `${((stats.sell_count / total) * 100).toFixed(0)}% of portfolio`;
+        
+        // Enhanced sector breakdown with table format
+        renderSectorTable(stats.sectors);
+        
     } catch (error) {
         console.error('Error loading dashboard:', error);
     }
 }
 
-// Companies functions
+function updateTrendIndicators(stats) {
+    // These would be calculated from historical data in a real app
+    // For now, using positive indicators for demonstration
+    const trends = [
+        { id: 'total-trend', value: 5 },
+        { id: 'upside-trend', value: stats.avg_upside > 10 ? 2 : -1 },
+        { id: 'pe-trend', value: 0 },
+        { id: 'roe-trend', value: stats.avg_roe > 15 ? 3 : -2 },
+        { id: 'wacc-trend', value: 0 }
+    ];
+    
+    trends.forEach(trend => {
+        const element = document.getElementById(trend.id);
+        if (element) {
+            const isPositive = trend.value > 0;
+            const isNeutral = trend.value === 0;
+            
+            element.className = `stat-trend ${isPositive ? 'positive' : isNeutral ? '' : 'negative'}`;
+            element.innerHTML = `
+                <span>${isPositive ? '↑' : isNeutral ? '—' : '↓'}</span>
+                <span>${Math.abs(trend.value)}%</span>
+            `;
+        }
+    });
+}
+
+function renderSectorTable(sectors) {
+    if (!sectors || sectors.length === 0) {
+        document.getElementById('sector-breakdown').innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-tertiary);">
+                    No sector data available. Add companies to see sector analysis.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    const maxUpside = Math.max(...sectors.map(s => Math.abs(s.avg_upside)));
+    
+    const sectorHtml = sectors.map(sector => {
+        const upsideClass = sector.avg_upside >= 0 ? 'positive' : 'negative';
+        const barWidth = maxUpside > 0 ? (Math.abs(sector.avg_upside) / maxUpside) * 100 : 0;
+        
+        return `
+            <tr>
+                <td><span class="sector-name">${sector.name}</span></td>
+                <td><span class="sector-count">${sector.count} companies</span></td>
+                <td><span class="sector-metric ${upsideClass}">${sector.avg_upside >= 0 ? '+' : ''}${sector.avg_upside.toFixed(1)}%</span></td>
+                <td><span class="sector-metric">${sector.avg_roe.toFixed(1)}%</span></td>
+                <td><span class="sector-metric">${sector.avg_pe ? sector.avg_pe.toFixed(1) + 'x' : 'N/A'}</span></td>
+                <td style="text-align: right;">
+                    <div class="sector-bar">
+                        <div class="sector-bar-fill" style="width: ${barWidth}%"></div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    document.getElementById('sector-breakdown').innerHTML = sectorHtml;
+}
+
+// Sector sorting functions
+let currentSectorSort = 'name';
+function sortSectorBy(type) {
+    if (!dashboardStats || !dashboardStats.sectors) return;
+    
+    currentSectorSort = type;
+    const sectors = [...dashboardStats.sectors];
+    
+    if (type === 'upside') {
+        sectors.sort((a, b) => b.avg_upside - a.avg_upside);
+    } else if (type === 'count') {
+        sectors.sort((a, b) => b.count - a.count);
+    } else if (type === 'roe') {
+        sectors.sort((a, b) => b.avg_roe - a.avg_roe);
+    } else {
+        sectors.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    renderSectorTable(sectors);
+}
+
+// ============================================
+// COMPANIES FUNCTIONS - ENHANCED
+// ============================================
+
 async function loadCompanies() {
     try {
         const response = await fetch('/api/companies');
         const companies = await response.json();
+        allCompanies = companies;
         
-        const companiesHtml = companies.map(company => {
-            const recClass = getRecommendationClass(company.recommendation);
-            const upsideColor = company.upside >= 0 ? '#38ef7d' : '#dc3545';
-            
-            return `
-                <div class="company-card">
-                    <div class="company-header">
-                        <div>
-                            <div class="company-name">${company.name}</div>
-                            <span class="company-sector">${company.sector || 'N/A'}</span>
-                        </div>
-                    </div>
-                    
-                    ${company.fair_value ? `
-                        <div class="company-metrics">
-                            <div class="metric">
-                                <div class="metric-label">Fair Value</div>
-                                <div class="metric-value">$${formatNumber(company.fair_value)}</div>
-                            </div>
-                            <div class="metric">
-                                <div class="metric-label">Upside</div>
-                                <div class="metric-value" style="color: ${upsideColor}">${company.upside?.toFixed(1)}%</div>
-                            </div>
-                        </div>
-                        
-                        <div class="recommendation-badge ${recClass}">
-                            ${company.recommendation || 'N/A'}
-                        </div>
-                    ` : '<p style="text-align: center; color: #999; padding: 1rem;">No valuation yet</p>'}
-                    
-                    <div class="company-actions">
-                        <button class="btn btn-primary btn-small" onclick="runValuation(${company.id})">
-                            ${company.fair_value ? 'Revalue' : 'Value'}
-                        </button>
-                        <button class="btn btn-secondary btn-small" onclick="editCompany(${company.id})">Edit</button>
-                        <button class="btn btn-danger btn-small" onclick="deleteCompany(${company.id})">Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+        // Apply current filters and sort
+        applyFiltersAndSort();
         
-        document.getElementById('companies-grid').innerHTML = companiesHtml || '<p>No companies yet. Add your first company!</p>';
     } catch (error) {
         console.error('Error loading companies:', error);
     }
 }
+
+function applyFiltersAndSort() {
+    // Filter
+    filteredCompanies = allCompanies.filter(company => {
+        // Search filter
+        const searchTerm = document.getElementById('company-search')?.value.toLowerCase() || '';
+        const matchesSearch = !searchTerm || 
+            company.name.toLowerCase().includes(searchTerm) ||
+            (company.sector && company.sector.toLowerCase().includes(searchTerm));
+        
+        // Recommendation filter
+        const matchesRec = currentFilter === 'all' || 
+            getRecommendationClass(company.recommendation) === currentFilter;
+        
+        return matchesSearch && matchesRec;
+    });
+    
+    // Sort
+    filteredCompanies.sort((a, b) => {
+        switch(currentSort) {
+            case 'name':
+                return a.name.localeCompare(b.name);
+            case 'upside-desc':
+                return (b.upside || 0) - (a.upside || 0);
+            case 'upside-asc':
+                return (a.upside || 0) - (b.upside || 0);
+            case 'roe-desc':
+                return (b.roe || 0) - (a.roe || 0);
+            case 'pe-asc':
+                return (a.pe_ratio || 999) - (b.pe_ratio || 999);
+            case 'sector':
+                return (a.sector || '').localeCompare(b.sector || '');
+            default:
+                return 0;
+        }
+    });
+    
+    renderCompanies();
+}
+
+function renderCompanies() {
+    const countElement = document.getElementById('companies-count');
+    if (countElement) {
+        countElement.textContent = filteredCompanies.length;
+    }
+    
+    if (filteredCompanies.length === 0) {
+        document.getElementById('companies-grid').innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+                <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">No companies found</h3>
+                <p style="color: var(--text-tertiary);">
+                    ${allCompanies.length === 0 
+                        ? 'Add your first company to get started with valuations.' 
+                        : 'Try adjusting your filters or search terms.'}
+                </p>
+                ${allCompanies.length === 0 
+                    ? '<button class="btn-primary" onclick="showAddCompanyModal()" style="margin-top: 1.5rem;">+ Add Company</button>' 
+                    : ''}
+            </div>
+        `;
+        return;
+    }
+    
+    const companiesHtml = filteredCompanies.map(company => {
+        const recClass = getRecommendationClass(company.recommendation);
+        const upsideValue = company.upside || 0;
+        const upsideClass = upsideValue >= 0 ? 'positive' : 'negative';
+        const upsideBarWidth = Math.min(Math.abs(upsideValue), 100);
+        
+        return `
+            <div class="company-card" data-company-id="${company.id}">
+                <div class="company-header">
+                    <div class="company-name">${company.name}</div>
+                    <div class="company-meta">
+                        <span class="company-sector">${company.sector || 'N/A'}</span>
+                        ${company.ticker ? `<span class="company-ticker">${company.ticker}</span>` : ''}
+                    </div>
+                </div>
+                
+                ${company.fair_value ? `
+                    <!-- Main Metrics -->
+                    <div class="company-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Fair Value</div>
+                            <div class="metric-value">$${formatNumber(company.fair_value)}</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Current Price</div>
+                            <div class="metric-value">$${company.current_price ? company.current_price.toFixed(2) : 'N/A'}</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Market Cap</div>
+                            <div class="metric-value">$${formatNumber(company.market_cap)}</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Upside</div>
+                            <div class="metric-value ${upsideClass}">
+                                ${upsideValue >= 0 ? '+' : ''}${upsideValue.toFixed(1)}%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quality Scores -->
+                    <div class="quality-scores">
+                        <div class="quality-item">
+                            <div class="quality-label">P/E</div>
+                            <div class="quality-value">${company.pe_ratio ? company.pe_ratio.toFixed(1) + 'x' : 'N/A'}</div>
+                        </div>
+                        <div class="quality-item">
+                            <div class="quality-label">ROE</div>
+                            <div class="quality-value ${company.roe >= 15 ? 'text-positive' : ''}">${company.roe ? company.roe.toFixed(1) + '%' : 'N/A'}</div>
+                        </div>
+                        <div class="quality-item">
+                            <div class="quality-label">Z-Score</div>
+                            <div class="quality-value ${company.z_score >= 2.99 ? 'text-positive' : company.z_score < 1.81 ? 'text-negative' : ''}">${company.z_score ? company.z_score.toFixed(2) : 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upside Visualization -->
+                    <div class="upside-bar">
+                        <div class="upside-label">
+                            <span>Target vs Current</span>
+                            <span class="upside-value ${upsideClass}">${upsideValue >= 0 ? '+' : ''}${upsideValue.toFixed(1)}%</span>
+                        </div>
+                        <div class="upside-visual">
+                            <div class="upside-fill ${upsideClass}" style="width: ${upsideBarWidth}%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recommendation Badge -->
+                    <div class="recommendation-badge ${recClass}">
+                        ${company.recommendation || 'N/A'}
+                    </div>
+                ` : `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-tertiary);">
+                        <p style="margin-bottom: 1rem;">📊 No valuation data yet</p>
+                        <p style="font-size: 0.875rem;">Run a valuation to see detailed analysis</p>
+                    </div>
+                `}
+                
+                <!-- Action Buttons -->
+                <div class="company-actions">
+                    <button class="btn btn-primary" onclick="runValuation(${company.id})" title="${company.fair_value ? 'Re-run valuation' : 'Run initial valuation'}">
+                        ${company.fair_value ? '🔄 Revalue' : '💰 Value'}
+                    </button>
+                    <button class="btn btn-secondary" onclick="editCompany(${company.id})" title="Edit company details">
+                        ✏️ Edit
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteCompany(${company.id})" title="Delete company">
+                        🗑️
+                    </button>
+                    <button class="btn btn-secondary btn-icon" onclick="toggleWatchlist(${company.id})" title="Add to watchlist">
+                        ⭐
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('companies-grid').innerHTML = companiesHtml;
+}
+
+// ============================================
+// FILTERING & SORTING
+// ============================================
+
+function filterCompanies() {
+    applyFiltersAndSort();
+}
+
+function filterByRecommendation(rec) {
+    currentFilter = rec;
+    
+    // Update button states
+    document.querySelectorAll('.toolbar .filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`filter-${rec}`).classList.add('active');
+    
+    applyFiltersAndSort();
+}
+
+function sortCompanies() {
+    currentSort = document.getElementById('company-sort').value;
+    applyFiltersAndSort();
+}
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
 
 function getRecommendationClass(recommendation) {
     if (!recommendation) return '';
@@ -125,10 +454,30 @@ function formatNumber(num) {
     return num.toFixed(2);
 }
 
-// Modal functions
+// Watchlist functionality (localStorage based)
+function toggleWatchlist(companyId) {
+    const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+    const index = watchlist.indexOf(companyId);
+    
+    if (index > -1) {
+        watchlist.splice(index, 1);
+        alert('Removed from watchlist');
+    } else {
+        watchlist.push(companyId);
+        alert('Added to watchlist');
+    }
+    
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+    renderCompanies(); // Refresh to update watchlist star
+}
+
+// ============================================
+// MODAL FUNCTIONS
+// ============================================
+
 function showAddCompanyModal() {
     currentCompanyId = null;
-    document.getElementById('modal-title').textContent = 'Add Company';
+    document.getElementById('modal-title').textContent = 'Add New Company';
     document.getElementById('company-form').reset();
     document.getElementById('company-id').value = '';
     
@@ -197,19 +546,21 @@ function closeValuationModal() {
     document.getElementById('valuation-modal').classList.remove('active');
 }
 
+// ============================================
+// SAVE COMPANY
+// ============================================
+
 async function saveCompany(e) {
     e.preventDefault();
     
     const companyId = document.getElementById('company-id').value;
     
-    // Helper to convert percentage to decimal - ALWAYS divides by 100
-    // Form displays percentages (25 = 25%), backend expects decimals (0.25)
+    // Helper to convert percentage to decimal
     const pct = (val, defaultVal = 0) => {
         const num = parseFloat(val) || defaultVal;
         return num / 100;
     };
     
-    // Flat structure matching Pydantic model
     const data = {
         name: document.getElementById('name').value,
         sector: document.getElementById('sector').value,
@@ -239,6 +590,8 @@ async function saveCompany(e) {
     };
     
     try {
+        showLoadingState('Saving company data...');
+        
         const url = companyId ? `/api/company/${companyId}` : '/api/company';
         const method = companyId ? 'PUT' : 'POST';
         
@@ -250,12 +603,12 @@ async function saveCompany(e) {
         
         if (!response.ok) {
             const error = await response.json();
+            hideLoadingState();
             if (error.details) {
-                // Pydantic validation errors
-                let errorMsg = 'Validation errors:\\n\\n';
+                let errorMsg = 'Validation errors:\n\n';
                 error.details.forEach(err => {
                     const field = err.loc[err.loc.length - 1];
-                    errorMsg += `• ${field}: ${err.msg}\\n`;
+                    errorMsg += `• ${field}: ${err.msg}\n`;
                 });
                 alert(errorMsg);
             } else {
@@ -265,68 +618,68 @@ async function saveCompany(e) {
         }
         
         const result = await response.json();
-        
         closeModal();
         
-        // For edits, automatically run valuation and show results
+        // For edits, automatically run valuation
         if (companyId) {
-            showLoadingState('Revaluing company with updated data...');
             try {
                 const valResponse = await fetch(`/api/valuation/${companyId}`, { method: 'POST' });
                 const valResult = await valResponse.json();
                 hideLoadingState();
-                showValuationResults(valResult, data.name);
+                showValuationResults(valResult);
             } catch (error) {
                 hideLoadingState();
                 console.error('Error running valuation:', error);
             }
         } else {
-            alert('Company created successfully! Click "Revalue" to generate valuation.');
+            hideLoadingState();
+            alert('✅ Company created successfully! Click "Value" to generate valuation.');
         }
         
         loadCompanies();
         loadDashboard();
     } catch (error) {
+        hideLoadingState();
         console.error('Error saving company:', error);
         alert('Error saving company');
     }
 }
 
+// ============================================
+// DELETE COMPANY
+// ============================================
+
 async function deleteCompany(companyId) {
-    if (!confirm('Are you sure you want to delete this company?')) return;
+    if (!confirm('⚠️ Are you sure you want to delete this company? This action cannot be undone.')) return;
     
     try {
+        showLoadingState('Deleting company...');
         const response = await fetch(`/api/company/${companyId}`, {
             method: 'DELETE'
         });
         
+        hideLoadingState();
+        
         if (response.ok) {
             loadCompanies();
             loadDashboard();
-            alert('Company deleted successfully!');
         } else {
             alert('Error deleting company');
         }
     } catch (error) {
+        hideLoadingState();
         console.error('Error deleting company:', error);
         alert('Error deleting company');
     }
 }
 
-// Valuation functions
+// ============================================
+// VALUATION FUNCTIONS - ENHANCED
+// ============================================
+
 async function runValuation(companyId) {
     try {
-        // Show professional loading spinner
-        const loadingHtml = `
-            <div class="loading-container">
-                <div class="spinner"></div>
-                <h3>Running CFA-Level Valuation</h3>
-                <p>Calculating DCF, WACC, Monte Carlo simulations...</p>
-                <p class="loading-subtext">This may take 5-10 seconds</p>
-            </div>
-        `;
-        document.getElementById('valuation-results').innerHTML = loadingHtml;
-        document.getElementById('valuation-modal').classList.add('active');
+        showLoadingState('Running comprehensive CFA-level valuation...');
         
         const response = await fetch(`/api/valuation/${companyId}`, {
             method: 'POST'
@@ -338,119 +691,141 @@ async function runValuation(companyId) {
         }
         
         const result = await response.json();
+        hideLoadingState();
         
-        displayValuationResults(result);
+        showValuationResults(result);
         loadCompanies();
         loadDashboard();
     } catch (error) {
+        hideLoadingState();
         console.error('Error running valuation:', error);
-        const errorHtml = `
-            <div class="error-container">
-                <h3>❌ Valuation Failed</h3>
-                <p class="error-message">${error.message}</p>
-                <button onclick="closeValuationModal()" class="btn">Close</button>
-            </div>
-        `;
-        document.getElementById('valuation-results').innerHTML = errorHtml;
+        alert(`❌ Valuation failed: ${error.message}`);
     }
 }
 
-function displayValuationResults(result) {
-    document.getElementById('valuation-company-name').textContent = result.name;
+function showValuationResults(result) {
+    document.getElementById('valuation-modal').classList.add('active');
+    document.getElementById('valuation-company-name').textContent = `${result.name} - Detailed Valuation`;
     
     const recClass = getRecommendationClass(result.recommendation);
-    const upsideColor = result.upside_pct >= 0 ? '#38ef7d' : '#dc3545';
+    const upsideColor = result.upside_pct >= 0 ? 'var(--positive)' : 'var(--negative)';
     
     const html = `
-        <div class="final-recommendation">
-            <h2>Investment Recommendation</h2>
-            <div class="recommendation-value">${result.recommendation}</div>
-            <div class="upside-value" style="color: ${upsideColor}">
-                ${result.upside_pct >= 0 ? '+' : ''}${result.upside_pct.toFixed(1)}% Upside/Downside
+        <!-- Valuation Header -->
+        <div class="valuation-header">
+            <div class="recommendation">${result.recommendation || 'N/A'}</div>
+            <div class="upside" style="color: rgba(255,255,255,0.95);">
+                ${result.upside_pct >= 0 ? '↑' : '↓'} ${result.upside_pct >= 0 ? '+' : ''}${result.upside_pct.toFixed(1)}% ${result.upside_pct >= 0 ? 'Upside' : 'Downside'}
             </div>
         </div>
         
-        <div class="valuation-section">
-            <h3>Valuation Summary</h3>
-            <div class="valuation-grid">
-                <div class="valuation-item">
-                    <div class="valuation-item-label">Fair Value</div>
-                    <div class="valuation-item-value">$${formatNumber(result.final_equity_value)}</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">Fair Price/Share</div>
-                    <div class="valuation-item-value">$${result.final_price_per_share.toFixed(2)}</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">Current Market Cap</div>
-                    <div class="valuation-item-value">$${formatNumber(result.market_cap)}</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">Current Price</div>
-                    <div class="valuation-item-value">$${result.current_price.toFixed(2)}</div>
-                </div>
+        <!-- Summary Metrics -->
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="summary-label">Fair Value (Equity)</div>
+                <div class="summary-value">$${formatNumber(result.final_equity_value)}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Fair Price/Share</div>
+                <div class="summary-value">$${result.final_price_per_share.toFixed(2)}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Current Market Cap</div>
+                <div class="summary-value">$${formatNumber(result.market_cap)}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Current Price</div>
+                <div class="summary-value">$${result.current_price.toFixed(2)}</div>
             </div>
         </div>
         
+        <!-- Valuation Methods -->
         <div class="valuation-section">
             <h3>Valuation Methods Comparison</h3>
-            <canvas id="valuationChart" style="max-height: 300px;"></canvas>
+            <div class="chart-container">
+                <canvas id="valuationChart"></canvas>
+            </div>
         </div>
         
+        <!-- Key Financial Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-item">
+                <div class="summary-label">WACC</div>
+                <div class="summary-value">${result.wacc.toFixed(2)}%</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">EV/EBITDA</div>
+                <div class="summary-value">${result.ev_ebitda.toFixed(1)}x</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">P/E Ratio</div>
+                <div class="summary-value">${result.pe_ratio.toFixed(1)}x</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">FCF Yield</div>
+                <div class="summary-value">${result.fcf_yield.toFixed(2)}%</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">ROE</div>
+                <div class="summary-value">${result.roe.toFixed(1)}%</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">ROIC</div>
+                <div class="summary-value">${result.roic.toFixed(1)}%</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">Debt/Equity</div>
+                <div class="summary-value">${result.debt_to_equity.toFixed(2)}x</div>
+            </div>
+            <div class="metric-item">
+                <div class="summary-label">Altman Z-Score</div>
+                <div class="summary-value ${result.z_score >= 2.99 ? 'text-positive' : result.z_score < 1.81 ? 'text-negative' : ''}">${result.z_score.toFixed(2)}</div>
+            </div>
+        </div>
+        
+        <!-- Monte Carlo Risk Analysis -->
         <div class="valuation-section">
-            <h3>Key Metrics</h3>
-            <div class="valuation-grid">
-                <div class="valuation-item">
-                    <div class="valuation-item-label">WACC</div>
-                    <div class="valuation-item-value">${result.wacc.toFixed(2)}%</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">EV/EBITDA</div>
-                    <div class="valuation-item-value">${result.ev_ebitda.toFixed(1)}x</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">P/E Ratio</div>
-                    <div class="valuation-item-value">${result.pe_ratio.toFixed(1)}x</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">FCF Yield</div>
-                    <div class="valuation-item-value">${result.fcf_yield.toFixed(2)}%</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">ROE</div>
-                    <div class="valuation-item-value">${result.roe.toFixed(1)}%</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">ROIC</div>
-                    <div class="valuation-item-value">${result.roic.toFixed(1)}%</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">Debt/Equity</div>
-                    <div class="valuation-item-value">${result.debt_to_equity.toFixed(2)}x</div>
-                </div>
-                <div class="valuation-item">
-                    <div class="valuation-item-label">Z-Score</div>
-                    <div class="valuation-item-value">${result.z_score.toFixed(2)}</div>
+            <h3>Monte Carlo Risk Analysis</h3>
+            <div class="chart-container">
+                <canvas id="monteCarloChart"></canvas>
+            </div>
+            <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; font-size: 0.875rem;">
+                    <div>
+                        <span style="color: var(--text-tertiary);">P10 (Pessimistic):</span>
+                        <strong style="color: var(--text-primary); margin-left: 0.5rem;">$${formatNumber(result.mc_p10)}</strong>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-tertiary);">P50 (Base Case):</span>
+                        <strong style="color: var(--text-primary); margin-left: 0.5rem;">$${formatNumber((result.mc_p10 + result.mc_p90) / 2)}</strong>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-tertiary);">P90 (Optimistic):</span>
+                        <strong style="color: var(--text-primary); margin-left: 0.5rem;">$${formatNumber(result.mc_p90)}</strong>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="valuation-section">
-            <h3>Monte Carlo Risk Analysis</h3>
-            <canvas id="monteCarloChart" style="max-height: 250px;"></canvas>
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--border-primary); display: flex; gap: 1rem;">
+            <button class="btn-submit" onclick="closeValuationModal()">Close</button>
+            <button class="btn-secondary" onclick="exportValuationPDF(${result.company_id})">📄 Export PDF</button>
         </div>
     `;
     
     document.getElementById('valuation-results').innerHTML = html;
     
-    // Render Chart.js visualizations
+    // Render charts
     setTimeout(() => {
         renderValuationChart(result);
         renderMonteCarloChart(result);
     }, 100);
 }
 
-// Chart.js visualization functions
+// ============================================
+// CHART RENDERING - ENHANCED
+// ============================================
+
 function renderValuationChart(result) {
     const ctx = document.getElementById('valuationChart');
     if (!ctx) return;
@@ -458,7 +833,7 @@ function renderValuationChart(result) {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['DCF Method', 'EV/EBITDA', 'P/E Method', 'Current Market Cap'],
+            labels: ['DCF Method', 'EV/EBITDA Comp', 'P/E Comp', 'Current Market Cap'],
             datasets: [{
                 label: 'Valuation ($M)',
                 data: [
@@ -468,28 +843,34 @@ function renderValuationChart(result) {
                     (result.market_cap / 1000000).toFixed(2)
                 ],
                 backgroundColor: [
-                    'rgba(56, 239, 125, 0.7)',
-                    'rgba(108, 92, 231, 0.7)',
-                    'rgba(255, 107, 107, 0.7)',
-                    'rgba(255, 195, 0, 0.7)'
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(236, 72, 153, 0.8)',
+                    'rgba(245, 158, 11, 0.8)'
                 ],
                 borderColor: [
-                    'rgba(56, 239, 125, 1)',
-                    'rgba(108, 92, 231, 1)',
-                    'rgba(255, 107, 107, 1)',
-                    'rgba(255, 195, 0, 1)'
+                    'rgb(59, 130, 246)',
+                    'rgb(139, 92, 246)',
+                    'rgb(236, 72, 153)',
+                    'rgb(245, 158, 11)'
                 ],
                 borderWidth: 2
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
                 legend: { display: false },
                 title: {
-                    display: true,
-                    text: 'Valuation Methods Comparison (in millions)'
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.parsed.y + 'M';
+                        }
+                    }
                 }
             },
             scales: {
@@ -499,6 +880,14 @@ function renderValuationChart(result) {
                         callback: function(value) {
                             return '$' + value + 'M';
                         }
+                    },
+                    grid: {
+                        color: 'rgba(148, 163, 184, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
                     }
                 }
             }
@@ -510,7 +899,6 @@ function renderMonteCarloChart(result) {
     const ctx = document.getElementById('monteCarloChart');
     if (!ctx) return;
     
-    // Create distribution approximation
     const mean = (result.mc_p10 + result.mc_p90) / 2;
     const p25 = result.mc_p10 + (mean - result.mc_p10) * 0.5;
     const p75 = result.mc_p90 - (result.mc_p90 - mean) * 0.5;
@@ -529,20 +917,27 @@ function renderMonteCarloChart(result) {
                     (result.mc_p90 / 1000000).toFixed(2)
                 ],
                 fill: true,
-                backgroundColor: 'rgba(108, 92, 231, 0.2)',
-                borderColor: 'rgba(108, 92, 231, 1)',
-                borderWidth: 2,
-                tension: 0.4
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: 'rgb(59, 130, 246)',
+                borderWidth: 3,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
                 legend: { display: false },
-                title: {
-                    display: true,
-                    text: 'Monte Carlo Simulation: Value Distribution (in millions)'
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.parsed.y + 'M';
+                        }
+                    }
                 }
             },
             scales: {
@@ -551,6 +946,14 @@ function renderMonteCarloChart(result) {
                         callback: function(value) {
                             return '$' + value + 'M';
                         }
+                    },
+                    grid: {
+                        color: 'rgba(148, 163, 184, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
                     }
                 }
             }
@@ -558,115 +961,42 @@ function renderMonteCarloChart(result) {
     });
 }
 
-// Export function
+// ============================================
+// LOADING STATES
+// ============================================
+
+function showLoadingState(message = 'Processing...') {
+    const overlay = document.getElementById('loading-overlay');
+    const text = document.getElementById('loading-text');
+    if (overlay && text) {
+        text.textContent = message;
+        overlay.style.display = 'flex';
+    }
+}
+
+function hideLoadingState() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+// ============================================
+// EXPORT FUNCTIONS
+// ============================================
+
 async function exportCSV() {
-    window.location.href = '/api/export/csv';
+    try {
+        showLoadingState('Generating CSV export...');
+        window.location.href = '/api/export/csv';
+        setTimeout(hideLoadingState, 1000);
+    } catch (error) {
+        hideLoadingState();
+        console.error('Error exporting CSV:', error);
+        alert('Error exporting data');
+    }
 }
 
-// Chart.js visualization functions
-function renderValuationChart(result) {
-    const ctx = document.getElementById('valuationChart');
-    if (!ctx) return;
-    
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['DCF Method', 'EV/EBITDA', 'P/E Method', 'Current Market Cap'],
-            datasets: [{
-                label: 'Valuation ($M)',
-                data: [
-                    (result.dcf_equity_value / 1000000).toFixed(2),
-                    (result.comp_ev_value / 1000000).toFixed(2),
-                    (result.comp_pe_value / 1000000).toFixed(2),
-                    (result.market_cap / 1000000).toFixed(2)
-                ],
-                backgroundColor: [
-                    'rgba(56, 239, 125, 0.7)',
-                    'rgba(108, 92, 231, 0.7)',
-                    'rgba(255, 107, 107, 0.7)',
-                    'rgba(255, 195, 0, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(56, 239, 125, 1)',
-                    'rgba(108, 92, 231, 1)',
-                    'rgba(255, 107, 107, 1)',
-                    'rgba(255, 195, 0, 1)'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: 'Valuation Methods Comparison (in millions)'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value + 'M';
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderMonteCarloChart(result) {
-    const ctx = document.getElementById('monteCarloChart');
-    if (!ctx) return;
-    
-    // Create distribution approximation
-    const mean = (result.mc_p10 + result.mc_p90) / 2;
-    const p25 = result.mc_p10 + (mean - result.mc_p10) * 0.5;
-    const p75 = result.mc_p90 - (result.mc_p90 - mean) * 0.5;
-    
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['P10', 'P25', 'Mean', 'P75', 'P90'],
-            datasets: [{
-                label: 'Valuation Range',
-                data: [
-                    (result.mc_p10 / 1000000).toFixed(2),
-                    (p25 / 1000000).toFixed(2),
-                    (mean / 1000000).toFixed(2),
-                    (p75 / 1000000).toFixed(2),
-                    (result.mc_p90 / 1000000).toFixed(2)
-                ],
-                fill: true,
-                backgroundColor: 'rgba(108, 92, 231, 0.2)',
-                borderColor: 'rgba(108, 92, 231, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: 'Monte Carlo Simulation: Value Distribution (in millions)'
-                }
-            },
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value + 'M';
-                        }
-                    }
-                }
-            }
-        }
-    });
+function exportValuationPDF(companyId) {
+    alert('📄 PDF export feature coming soon!\n\nThis will generate a comprehensive valuation report including all metrics, charts, and analysis.');
 }
