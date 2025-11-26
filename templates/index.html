@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Company Valuation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">📊 CFA Valuation Tool</h1>
+            <div class="nav-links">
+                <a href="#" onclick="showView('dashboard')" class="nav-link active">Dashboard</a>
+                <a href="#" onclick="showView('companies')" class="nav-link">Companies</a>
+                <a href="#" onclick="exportCSV()" class="nav-link">Export</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view active">
+            <h2>Portfolio Dashboard</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Companies</div>
+                    <div class="stat-value" id="total-companies">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Upside</div>
+                    <div class="stat-value" id="avg-upside">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average P/E</div>
+                    <div class="stat-value" id="avg-pe">0.0x</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average ROE</div>
+                    <div class="stat-value" id="avg-roe">0%</div>
+                </div>
+            </div>
+
+            <div class="recommendation-grid">
+                <div class="rec-card buy">
+                    <h3>Strong Buy / Buy</h3>
+                    <div class="rec-count" id="buy-count">0</div>
+                </div>
+                <div class="rec-card hold">
+                    <h3>Hold</h3>
+                    <div class="rec-count" id="hold-count">0</div>
+                </div>
+                <div class="rec-card sell">
+                    <h3>Sell / Underweight</h3>
+                    <div class="rec-count" id="sell-count">0</div>
+                </div>
+            </div>
+
+            <div class="sector-analysis">
+                <h3>Sector Analysis</h3>
+                <div id="sector-breakdown"></div>
+            </div>
+        </div>
+
+        <!-- Companies View -->
+        <div id="companies-view" class="view">
+            <div class="view-header">
+                <h2>Companies</h2>
+                <button class="btn btn-primary" onclick="showAddCompanyModal()">+ Add Company</button>
+            </div>
+
+            <div class="companies-grid" id="companies-grid">
+                <!-- Companies will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Company Modal -->
+    <div id="company-modal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Company</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="company-form">
+                    <input type="hidden" id="company-id">
+                    
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Company Name *</label>
+                                <input type="text" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sector *</label>
+                                <input type="text" id="sector" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Financial Data</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Revenue ($)</label>
+                                <input type="number" id="revenue" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>EBITDA ($)</label>
+                                <input type="number" id="ebitda" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Depreciation ($)</label>
+                                <input type="number" id="depreciation" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Profit Margin (%)</label>
+                                <input type="number" id="profit_margin" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>CapEx (% of Revenue)</label>
+                                <input type="number" id="capex_pct" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Working Capital Change ($)</label>
+                                <input type="number" id="working_capital_change" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Growth Rates (%)</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Year 1-2 Growth</label>
+                                <input type="number" id="growth_rate_y1" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Year 3-4 Growth</label>
+                                <input type="number" id="growth_rate_y2" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Year 5-6 Growth</label>
+                                <input type="number" id="growth_rate_y3" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Terminal Growth</label>
+                                <input type="number" id="terminal_growth" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Capital Structure</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Shares Outstanding</label>
+                                <input type="number" id="shares_outstanding" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Debt ($)</label>
+                                <input type="number" id="debt" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Cash ($)</label>
+                                <input type="number" id="cash" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Market Cap Estimate ($)</label>
+                                <input type="number" id="market_cap_estimate" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Tax Rate (%)</label>
+                                <input type="number" id="tax_rate" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Risk Parameters</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Beta</label>
+                                <input type="number" id="beta" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Risk-Free Rate (%)</label>
+                                <input type="number" id="risk_free_rate" step="0.01" value="4.5">
+                            </div>
+                            <div class="form-group">
+                                <label>Market Risk Premium (%)</label>
+                                <input type="number" id="market_risk_premium" step="0.01" value="6.5">
+                            </div>
+                            <div class="form-group">
+                                <label>Country Risk Premium (%)</label>
+                                <input type="number" id="country_risk_premium" step="0.01" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Size Premium (%)</label>
+                                <input type="number" id="size_premium" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Comparable Multiples</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Industry EV/EBITDA</label>
+                                <input type="number" id="comparable_ev_ebitda" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>Industry P/E</label>
+                                <input type="number" id="comparable_pe" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>Industry PEG</label>
+                                <input type="number" id="comparable_peg" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Company</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Valuation Results Modal -->
+    <div id="valuation-modal" class="modal">
+        <div class="modal-content xlarge">
+            <div class="modal-header">
+                <h2 id="valuation-company-name">Valuation Results</h2>
+                <span class="close" onclick="closeValuationModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="valuation-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
